@@ -59,7 +59,45 @@ const processJiraCallback = async (code, userId) => {
   }
 };
 
+const refreshJiraToken = async (userId) => {
+  console.log(`Refreshing token for user: ${userId}`);
+  
+  const user = await User.findById(userId);
+  if (!user || !user.jiraConnection || !user.jiraConnection.refreshToken) {
+    throw new Error('User has no refresh token to use.');
+  }
+
+  const { refreshToken } = user.jiraConnection;
+
+  try {
+    const tokenResponse = await axios.post('https://auth.atlassian.com/oauth/token', {
+      grant_type: 'refresh_token',
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      refresh_token: refreshToken,
+    });
+
+    const { access_token, refresh_token: newRefreshToken, expires_in } = tokenResponse.data;
+
+    user.jiraConnection.accessToken = access_token;
+    user.jiraConnection.refreshToken = newRefreshToken;
+    user.jiraConnection.expiresAt = new Date(Date.now() + expires_in * 1000);
+
+    await user.save();
+    console.log('Successfully refreshed and saved new tokens.');
+
+    return access_token;
+
+  } catch (error) {
+    console.error('Error refreshing token:', error.response?.data || error.message);
+    user.jiraConnection = undefined;
+    await user.save();
+    throw new Error('Failed to refresh token. User must re-authenticate.');
+  }
+};
+
 module.exports = {
   getJiraAuthUrl,
-  processJiraCallback
+  processJiraCallback,
+  refreshJiraToken, 
 };

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const User = require('../models/userModel'); 
+const { refreshJiraToken } = require('./jiraAuthService');
 
 const JIRA_DOMAIN = process.env.JIRA_DOMAIN;
 const JIRA_USER_EMAIL = process.env.JIRA_USER_EMAIL;
@@ -39,50 +40,46 @@ const getJiraTickets = async (projectKey) => {
 };
 
 const getTicketsForUser = async (userId) => {
-
   const user = await User.findById(userId);
   if (!user || !user.jiraConnection || !user.jiraConnection.accessToken) {
     throw new Error('User not found or Jira not connected.');
   }
 
-  const { accessToken, atlassianId } = user.jiraConnection;
+  let { accessToken, atlassianId } = user.jiraConnection;
 
-const jiraApiUrl = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/search/jql`;
+  const jiraApiUrl = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/search/jql`;
   const jql = `status = "Done" ORDER BY updated DESC`;
-
-  const requestBody = {
-    jql: jql,
-    fields: [
-      "summary",
-      "description",
-      "issuetype",
-      "status",
-      "fixVersions",
-      "labels"
-    ]
-  };
+  const requestBody = { jql, fields: ["summary", "description", "issuetype", "status"] };
 
   try {
-
     const response = await axios.post(jiraApiUrl, requestBody, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`, 
-        'Accept': 'application/json',
-      }
+      headers: { 'Authorization': `Bearer ${accessToken}` }
     });
-
     return response.data.issues;
 
   } catch (error) {
+    
     if (error.response && error.response.status === 401) {
-      throw new Error('Jira access token is expired.');
+      console.log('Access token expired. Attempting to refresh...');
+      try {
+        const newAccessToken = await refreshJiraToken(userId);
+        console.log('Retrying API call with new token...');
+        const retryResponse = await axios.post(jiraApiUrl, requestBody, {
+          headers: { 'Authorization': `Bearer ${newAccessToken}` }
+        });
+        return retryResponse.data.issues;
+
+      } catch (refreshError) {
+        throw refreshError;
+      }
     }
+    
     console.error("Error fetching tickets for user:", error.response?.data || error.message);
     throw new Error('Failed to fetch tickets from Jira.');
   }
 };
 
-module.exports = { 
-  getJiraTickets,   
-  getTicketsForUser    
+module.exports = {
+  getJiraTickets,
+  getTicketsForUser
 };
