@@ -39,7 +39,7 @@ const getJiraTickets = async (projectKey) => {
   }
 };
 
-const getTicketsForUser = async (userId) => {
+const getTicketsForUser = async (userId, startDate, endDate) => {
   const user = await User.findById(userId);
   if (!user || !user.jiraConnection || !user.jiraConnection.accessToken) {
     throw new Error('User not found or Jira not connected.');
@@ -48,8 +48,22 @@ const getTicketsForUser = async (userId) => {
   let { accessToken, atlassianId } = user.jiraConnection;
 
   const jiraApiUrl = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/search/jql`;
-  const jql = `status = "Done" ORDER BY updated DESC`;
-  const requestBody = { jql, fields: ["summary", "description", "issuetype", "status"] };
+
+  const start = new Date(startDate).toISOString().split('T')[0];
+  const end = new Date(endDate).toISOString().split('T')[0];
+  
+  const jql = `
+    project = "${projectKey}"
+    status = "Done" 
+    AND resolutiondate >= "${start}" 
+    AND resolutiondate <= "${end}"
+    ORDER BY updated DESC
+  `;
+
+  const requestBody = {
+    jql: jql,
+    fields: ["summary", "description", "issuetype", "status", "fixVersions", "labels"]
+  };
 
   try {
     const response = await axios.post(jiraApiUrl, requestBody, {
@@ -58,9 +72,10 @@ const getTicketsForUser = async (userId) => {
     return response.data.issues;
 
   } catch (error) {
-    
+
     if (error.response && error.response.status === 401) {
       console.log('Access token expired. Attempting to refresh...');
+
       try {
         const newAccessToken = await refreshJiraToken(userId);
         console.log('Retrying API call with new token...');
@@ -68,12 +83,11 @@ const getTicketsForUser = async (userId) => {
           headers: { 'Authorization': `Bearer ${newAccessToken}` }
         });
         return retryResponse.data.issues;
-
       } catch (refreshError) {
         throw refreshError;
       }
+
     }
-    
     console.error("Error fetching tickets for user:", error.response?.data || error.message);
     throw new Error('Failed to fetch tickets from Jira.');
   }
