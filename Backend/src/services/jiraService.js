@@ -87,7 +87,61 @@ const getTicketsForUser = async (userId, projectKey,startDate, endDate) => {
   }
 };
 
+const getProjectsForUser = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user || !user.jiraConnection || !user.jiraConnection.accessToken) {
+    throw new Error('User not found or Jira not connected.');
+  }
+
+  let { accessToken, atlassianId } = user.jiraConnection;
+  const jiraApiUrl = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/project/search`;
+
+  try {
+    
+    const response = await axios.get(jiraApiUrl, {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    
+    const projects = response.data.values.map(project => ({
+      id: project.id,
+      key: project.key,
+      name: project.name,
+      avatarUrl: project.avatarUrls['48x48']
+    }));
+    
+    return projects;
+
+  } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.log('Access token expired. Attempting to refresh...');
+      try {
+        const newAccessToken = await refreshJiraToken(userId);
+        console.log('Retrying API call with new token...');
+        
+        const retryResponse = await axios.get(jiraApiUrl, {
+          headers: { 'Authorization': `Bearer ${newAccessToken}` }
+        });
+
+        const projects = retryResponse.data.values.map(project => ({
+          id: project.id,
+          key: project.key,
+          name: project.name,
+          avatarUrl: project.avatarUrls['48x48']
+        }));
+
+        return projects;
+        
+      } catch (refreshError) {
+        throw refreshError;
+      }
+    }
+    console.error("Error fetching projects for user:", error.response?.data || error.message);
+    throw new Error('Failed to fetch projects from Jira.');
+  }
+};
+
 module.exports = {
   getJiraTickets,
-  getTicketsForUser
+  getTicketsForUser,
+  getProjectsForUser 
 };

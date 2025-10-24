@@ -1,5 +1,5 @@
 // This File for fetching tickets
-const { getJiraTickets, getTicketsForUser } = require('../services/jiraService'); // You already have this service
+const { getJiraTickets, getTicketsForUser, getProjectsForUser } = require('../services/jiraService'); 
 
 const handleGetJiraTickets = async (req, res) => {
   try {
@@ -30,7 +30,20 @@ const handleGetMyTickets = async (req, res) => {
   }
 };
 
-module.exports = { 
-  handleGetJiraTickets, 
-  handleGetMyTickets    
+const handleGetMyProjects = async (req, res) => {
+  try {
+    const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+
+    const projects = await getProjectsForUser(tempUserId);
+    res.status(200).json(projects);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  handleGetJiraTickets,
+  handleGetMyTickets,
+  handleGetMyProjects 
 };

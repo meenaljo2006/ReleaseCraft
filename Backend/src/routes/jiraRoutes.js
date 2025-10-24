@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { handleGetJiraTickets, handleGetMyTickets } = require('../controllers/jiraController'); 
+const { handleGetJiraTickets, handleGetMyTickets,handleGetMyProjects} = require('../controllers/jiraController'); 
 
 const { handleJiraAuthRedirect, handleJiraAuthCallback } = require('../controllers/jiraAuthController');
 
@@ -11,6 +11,7 @@ router.get('/tickets', handleGetJiraTickets);
 
 // --- Real User Route ---
 router.get('/me/tickets', handleGetMyTickets);
+router.get('/me/projects', handleGetMyProjects);
 
 // --- OAuth Routes ---
 router.get('/auth/connect', handleJiraAuthRedirect);
