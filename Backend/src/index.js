@@ -4,6 +4,7 @@ require('dotenv').config(); // Load .env variables
 
 const userRoutes = require('./routes/userRoutes'); //Route1
 const jiraRoutes = require('./routes/jiraRoutes');
+const releaseRoutes = require('./routes/releaseRoutes');
 
 const app = express();
 const port = process.env.PORT;
@@ -33,3 +34,4 @@ app.use(express.json());
 //Route2 - Tell Express that any URL starting with "/api/users" should be handled by your "userRoutes" file.
 app.use('/api/users', userRoutes); 
 app.use('/api/jira', jiraRoutes);
+app.use('/api/releases', releaseRoutes);
