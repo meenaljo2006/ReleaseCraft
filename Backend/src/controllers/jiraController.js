@@ -16,8 +16,13 @@ const handleGetJiraTickets = async (req, res) => {
 
 const handleGetMyTickets = async (req, res) => {
   try {
-    const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
-    const tickets = await getTicketsForUser(tempUserId);
+    const tickets = await getTicketsForUser(
+      tempUserId,
+      fakeProjectKey,
+      fakeStartDate,
+      fakeEndDate
+    );
+
     res.status(200).json(tickets);
 
   } catch (error) {

@@ -39,7 +39,7 @@ const getJiraTickets = async (projectKey) => {
   }
 };
 
-const getTicketsForUser = async (userId, startDate, endDate) => {
+const getTicketsForUser = async (userId, projectKey,startDate, endDate) => {
   const user = await User.findById(userId);
   if (!user || !user.jiraConnection || !user.jiraConnection.accessToken) {
     throw new Error('User not found or Jira not connected.');
@@ -52,13 +52,7 @@ const getTicketsForUser = async (userId, startDate, endDate) => {
   const start = new Date(startDate).toISOString().split('T')[0];
   const end = new Date(endDate).toISOString().split('T')[0];
   
-  const jql = `
-    project = "${projectKey}"
-    status = "Done" 
-    AND resolutiondate >= "${start}" 
-    AND resolutiondate <= "${end}"
-    ORDER BY updated DESC
-  `;
+  const jql = `project = "${projectKey}" AND status = "Done" AND resolutiondate >= "${start}" AND resolutiondate <= "${end}" ORDER BY updated DESC`;
 
   const requestBody = {
     jql: jql,
