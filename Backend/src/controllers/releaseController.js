@@ -1,6 +1,7 @@
 const Release = require('../models/releaseModel');
-const { getTicketsForUser } = require('../services/jiraService');
-const { summarizeTicket } = require('../services/aiService');
+const generationQueue = require('../queues/generationQueue');
+// const { getTicketsForUser } = require('../services/jiraService');
+// const { summarizeTicket } = require('../services/aiService');
 
 //Create Releases
 const createRelease = async (req, res) => {
@@ -43,52 +44,80 @@ const getReleases = async (req, res) => {
 };
 
 //Generate Releases
+// const generateReleaseNotes = async (req, res) => {
+//   try {
+//     const { id: releaseId } = req.params; 
+//     const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+
+//     const release = await Release.findOne({ _id: releaseId, user: tempUserId });
+//     if (!release) {
+//       return res.status(404).json({ message: 'Release not found' });
+//     }
+
+//     // --- 1. FETCH TICKETS (Phase 1) ---
+//     console.log("Fetching tickets from Jira...");
+//     const tickets = await getTicketsForUser(
+//       tempUserId, 
+//       release.projectKey, 
+//       release.startDate, 
+//       release.endDate
+//     );
+//     console.log(`Fetched ${tickets.length} tickets.`);
+
+//     // --- 2. SUMMARIZE WITH AI (Phase 2) ---
+//     // This part is slow! We are calling the AI for *every* ticket.
+//     console.log("Summarizing tickets with AI... (this may be slow)");
+    
+//     const summarizedNotes = [];
+//     for (const ticket of tickets) {
+//       const technicalSummary = ticket.fields.summary;
+//       const technicalDescription = ticket.fields.description; // Get description too
+      
+//       const humanSummary = await summarizeTicket(technicalSummary, technicalDescription);
+      
+//       summarizedNotes.push({
+//         original: technicalSummary,
+//         human: humanSummary
+//       });
+//     }
+
+//     // 3. Save the result to the release
+//     release.content = summarizedNotes.map(note => `- ${note.human}`).join('\n');
+//     await release.save();
+
+//     // 4. Return the new human-readable summaries
+//     console.log("Done summarizing!");
+//     res.status(200).json(summarizedNotes);
+
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 const generateReleaseNotes = async (req, res) => {
   try {
-    const { id: releaseId } = req.params; 
-    const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+    const { id: releaseId } = req.params;
+    const tempUserId = "68fb5481da4dc85cbe1f7d53"; // Your test user ID
 
+    // 1. Find the release
     const release = await Release.findOne({ _id: releaseId, user: tempUserId });
     if (!release) {
       return res.status(404).json({ message: 'Release not found' });
     }
 
-    // --- 1. FETCH TICKETS (Phase 1) ---
-    console.log("Fetching tickets from Jira...");
-    const tickets = await getTicketsForUser(
-      tempUserId, 
-      release.projectKey, 
-      release.startDate, 
-      release.endDate
-    );
-    console.log(`Fetched ${tickets.length} tickets.`);
+    // 2. Add the job to the queue
+    // This is the *only* thing the controller does now
+    await generationQueue.add('generate-notes-job', {
+      releaseId: releaseId,
+      userId: tempUserId
+    });
 
-    // --- 2. SUMMARIZE WITH AI (Phase 2) ---
-    // This part is slow! We are calling the AI for *every* ticket.
-    console.log("Summarizing tickets with AI... (this may be slow)");
-    
-    const summarizedNotes = [];
-    for (const ticket of tickets) {
-      const technicalSummary = ticket.fields.summary;
-      const technicalDescription = ticket.fields.description; // Get description too
-      
-      const humanSummary = await summarizeTicket(technicalSummary, technicalDescription);
-      
-      summarizedNotes.push({
-        original: technicalSummary,
-        human: humanSummary
-      });
-    }
+    // 3. Respond INSTANTLY
+    res.status(202).json({ 
+      message: 'Accepted: Release generation has started in the background.' 
+    });
 
-    // 3. Save the result to the release
-    release.content = summarizedNotes.map(note => `- ${note.human}`).join('\n');
-    await release.save();
-
-    // 4. Return the new human-readable summaries
-    console.log("Done summarizing!");
-    res.status(200).json(summarizedNotes);
-
-  } catch (error) {
+  } catch (error){
     res.status(500).json({ message: error.message });
   }
 };
