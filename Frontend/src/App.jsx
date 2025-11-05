@@ -1,6 +1,5 @@
-// src/App.js
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from './context/AuthContext'; // Import your hook
 
 // Import your pages
@@ -8,7 +7,9 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import Dashboard from './pages/Dashboard';
-import Navbar from './components/Navbar';
+
+// Import your new layout
+import MainLayout from './layouts/MainLayout'; 
 
 // This is a special component to protect your dashboard
 const ProtectedRoute = ({ children }) => {
@@ -23,14 +24,17 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
-      <Navbar /> {/* Your Navbar will now show on every page */}
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<HomePage />} />
+        {/* Route 1: Public pages with Navbar (using MainLayout) */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<HomePage />} />
+        </Route>
+
+        {/* Route 2: Auth pages (without Navbar) */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
-        {/* Private (Protected) Route */}
+        {/* Route 3: Private (Protected) Route (without Navbar) */}
         <Route
           path="/dashboard"
           element={
@@ -39,8 +43,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        
-        {/* Add a catch-all or 404 page later */}
       </Routes>
     </BrowserRouter>
   );
