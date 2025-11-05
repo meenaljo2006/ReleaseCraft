@@ -1,6 +1,4 @@
-/* Add this import to your main CSS file (e.g., index.css)
-  @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-*/
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Pacifico&display=swap');
 
 /* CSS Variables for theming (DARK MODE) */
 :root {
@@ -39,18 +37,20 @@
   /* Upped opacity for dark mode (from 0.13 to 0.3) */
   background-image: linear-gradient(
     to bottom right,
-    rgba(190, 18, 60, 0.3),
+    rgba(190, 18, 60, 0.13),
     transparent,
-    rgba(190, 18, 60, 0.3)
+    rgba(190, 18, 60, 0.13)
   );
-  filter: blur(48px);
+  filter: blur(90px);
 }
 
-/* Container for all animated shapes */
+/* Container for all animated shapes */ 
 .hero-shapes-container {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  opacity: 0.6;
+  /* This is behind the z-index: 10 content */
 }
 
 /* Elegant Shape Component Styles */
@@ -132,15 +132,18 @@
   left: 20%;
 }
 
+/* --- YAHAN SE FIX SHURU HOTA HAI --- */
+
 /* Hero Content */
 .hero-content-container {
   position: relative;
-  z-index: 10;
+  z-index: 10; /* Yeh text ko shapes ke 'upar' rakhta hai */
   margin-left: auto;
   margin-right: auto;
   max-width: 80rem; /* max-w-7xl */
   padding-left: 1rem;
   padding-right: 1rem;
+  color: var(--white);
 }
 
 .hero-content {
@@ -168,17 +171,19 @@
   );
   -webkit-background-clip: text;
   background-clip: text;
-  color: transparent;
+  /* FIX 2: YAHAN 'color: var(--white);' KO 'color: transparent;'
+     SE BADAL DIYA GAYA HAI. Yeh gradient ko dikhata hai.
+  */
+  color: var(--white);
 }
+
+/* --- YAHAN TAK FIX THA --- */
+
 
 .hero-headline-styled {
   font-family: 'Pacifico', cursive; /* The custom font */
   font-weight: 400; /* Pacifico is only 400 weight */
-  background-image: linear-gradient(
-    to right,
-    var(--primary-light),
-    var(--primary)
-  );
+  background-image: linear-gradient(to right, #8360c3, #2ebf91);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -187,14 +192,16 @@
 }
 
 .hero-subheadline {
-  color: var(--muted-foreground); /* Updated to light gray */
+  /* color: var(--muted-foreground); */
+  color: rgb(165, 164, 164);
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 2.5rem; /* mb-10 */
   max-width: 42rem; /* max-w-xl */
   padding-left: 1rem;
   padding-right: 1rem;
-  font-size: 1.125rem; /* text-lg */
+  font-size: 2rem; /* text-lg */
   line-height: 1.75; /* leading-relaxed */
 }
 
@@ -214,16 +221,13 @@
   border-radius: 9999px; /* rounded-full */
   font-size: 1rem;
   font-weight: 500;
+  text-decoration: none;
 
   /* Button appearance */
   color: var(--white);
   border: none;
-  background-image: linear-gradient(
-    to right,
-    var(--primary-light),
-    var(--primary)
-  );
-  box-shadow: 0 4px 14px 0 rgba(190, 18, 60, 0.2); /* shadow-primary/20 */
+  background-image: linear-gradient(to right, #8360c3, #2ebf91);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   cursor: pointer;
 
   /* Transitions */
@@ -231,18 +235,49 @@
 }
 
 .hero-cta-button:hover {
-  background-image: linear-gradient(
-    to right,
-    rgba(244, 63, 94, 0.9),
-    rgba(190, 18, 60, 0.9)
-  );
-  box-shadow: 0 6px 20px 0 rgba(190, 18, 60, 0.3);
+  transform: scale(1.05); 
+
 }
 
 .hero-cta-icon {
   margin-left: 0.5rem; /* ml-2 */
   height: 1rem; /* h-4 */
   width: 1rem; /* w-4 */
+}
+
+/* STYLES FOR THE NEW BUTTON */
+.hero-cta-button-outline {
+  /* Button sizing and layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem; /* ~size-lg */
+  border-radius: 9999px; /* rounded-full */
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  box-sizing: border-box;
+
+  /* Button appearance */
+  color: var(--foreground);
+  background-color: transparent;
+  border: 1px solid rgba(25, 121, 147, 0.402); /* border-primary/30 */
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
+  cursor: pointer;
+
+  /* Transitions */
+  transition: all 0.3s ease-in-out;
+}
+
+.hero-cta-button-outline:hover {
+  background-color: rgba(18, 153, 190, 0.05); /* hover:bg-primary/5 */
+  border-color: rgba(10, 63, 77, 0.402); /* Made border slightly more visible on hover */
+   transform: scale(1.05); 
+}
+
+a{
+  text-decoration: none;
+  color: white;
 }
 
 /* Bottom fade overlay */
@@ -277,9 +312,6 @@
   .hero-headline {
     font-size: 5rem; /* md:text-8xl */
   }
-  .hero-subheadline {
-    font-size: 1.25rem; /* md:text-xl */
-  }
   .shape-1 {
     top: 20%;
     left: -5%;
@@ -300,4 +332,28 @@
     top: 10%;
     left: 25%;
   }
+}
+
+.hero-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* z-index 1 text (10) se neeche, par shapes (0) se upar rahega */
+  z-index: 1; 
+  
+  /* Yahi hai Vignette effect:
+     Beech mein 40% tak transparent,
+     phir 100% tak 70% kaala ho jayega
+  */
+  background: radial-gradient(
+    ellipse at center, 
+    transparent 70%, 
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  
+  /* Taaki yeh layer mouse clicks ko block na kare */
+  pointer-events: none;
 }

@@ -7,26 +7,8 @@ import logo from "../../public/logo.png"
 const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Features', href: '/features' },
-  {
-    name: 'Products',
-    href: '/products',
-    hasDropdown: true,
-    dropdownItems: [
-      {
-        name: 'Analytics',
-        href: '/analytics',
-        description: 'Track your metrics',
-      },
-      {
-        name: 'Dashboard',
-        href: '/dashboard',
-        description: 'Manage your data',
-      },
-      { name: 'Reports', href: '/reports', description: 'Generate insights' },
-    ],
-  },
   { name: 'Pricing', href: '/pricing' },
-  { name: 'About', href: '/about' },
+  { name: 'Workflow', href: '/workflow' },
 ];
 
 export default function Navbar() {
@@ -115,38 +97,6 @@ export default function Navbar() {
                     />
                   )}
                 </a>
-
-                {item.hasDropdown && (
-                  <AnimatePresence>
-                    {activeDropdown === item.name && (
-                      <motion.div
-                        className="dropdown-menu"
-                        variants={dropdownVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="hidden"
-                        transition={{ duration: 0.2 }}
-                      >
-                        {item.dropdownItems?.map((dropdownItem) => (
-                          <a
-                            key={dropdownItem.name}
-                            href={dropdownItem.href}
-                            className="dropdown-link"
-                          >
-                            <div className="dropdown-item-name">
-                              {dropdownItem.name}
-                            </div>
-                            {dropdownItem.description && (
-                              <div className="dropdown-item-description">
-                                {dropdownItem.description}
-                              </div>
-                            )}
-                          </a>
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                )}
               </div>
             ))}
           </nav>

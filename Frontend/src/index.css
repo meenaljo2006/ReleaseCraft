@@ -1,6 +1,23 @@
+:root {
+  --color-background-primary: #121212; /* Dark background */
+  --color-background-secondary: #1e1e1e; /* Slightly lighter (for cards/modals) */
+  --color-text-primary: #e0e0e0;       /* Main text (light gray) */
+  --color-text-secondary: #aaaaaa;     /* Sub-text (dimmer gray) */
+  --color-border: #333333;           /* Borders */
+  --color-primary: #3b82f6;          /* Your main brand color (blue) */
+  --color-primary-hover: #60a5fa;    /* Brand color hover */
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   margin: 0;
   padding: 0;
 
+  /* Use our new variables */
+  background-color: var(--color-background-primary);
+  color: var(--color-text-primary);
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Pacifico&display=swap');
+
+

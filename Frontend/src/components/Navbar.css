@@ -93,57 +93,9 @@ body {
   text-decoration: none;
   transition: color 0.2s ease-in-out;
 }
-
-.nav-link:hover {
-  color: var(--rose-500);
-}
-
-.dropdown-icon {
-  height: 1rem; /* 16px */
-  width: 1rem; /* 16px */
-  transition: transform 0.2s ease-in-out;
-}
-
 .nav-item-wrapper:hover .dropdown-icon,
 .dropdown-icon.active {
   transform: rotate(180deg);
-}
-
-/* Desktop Dropdown Menu */
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 0.5rem; /* 8px */
-  width: 16rem; /* 256px */
-  overflow: hidden;
-  background-color: rgba(var(--background), 0.95);
-  border: 1px solid rgb(var(--border));
-  border-radius: 0.75rem; /* 12px */
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
-    0 8px 10px -6px rgb(0 0 0 / 0.1);
-  backdrop-filter: blur(16px);
-}
-
-.dropdown-link {
-  display: block;
-  padding: 0.75rem 1rem; /* 12px 16px */
-  text-decoration: none;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.dropdown-link:hover {
-  background-color: rgb(var(--muted));
-}
-
-.dropdown-item-name {
-  color: rgb(var(--foreground));
-  font-weight: 500;
-}
-
-.dropdown-item-description {
-  color: rgb(var(--muted-foreground));
-  font-size: 0.875rem; /* 14px */
 }
 
 /* Desktop Auth Buttons */
@@ -160,11 +112,14 @@ body {
 }
 
 .auth-link.sign-in {
-  color: rgb(var(--foreground));
+  color: rgb(var(--muted));
 }
 
 .auth-link.sign-in:hover {
-  color: var(--rose-500);
+  color: var(--white);
+  text-decoration: underline;
+  transform: scale(1.05);
+  
 }
 
 .auth-link.get-started {
@@ -313,3 +268,48 @@ body {
     padding-right: 1.5rem; /* 24px */
   }
 }
+
+/* 1. Sabse pehle, .nav-link ko thoda update karein */
+.nav-link {
+  position: relative; /* Yeh line add karein */
+  display: flex;
+  align-items: center;
+  gap: 0.25rem; /* 4px */
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+  padding-bottom: 5px; /* Thodi padding taaki line text se na chipke */
+}
+
+/* 2. Ab outline ke liye naya ::after pseudo-element add karein */
+.nav-link::after {
+  content: ''; /* Virtual element banane ke liye zaroori */
+  position: absolute; /* .nav-link ke relative position hoga */
+  bottom: 0; /* Link ke bilkul neeche */
+  left: 50%; /* Center se shuru karega */
+  transform: translateX(-50%); /* Bilkul center mein laane ke liye */
+  width: 0; /* Shuruwaat mein width 0 hai (hidden) */
+  height: 2px; /* Line ki motai */
+  background-color: var(--white); /* Aapke hover color se match karta hua */
+  
+  /* Yahi "moving" effect hai */
+  transition: width 0.3s ease-out; 
+}
+
+/* 3. Ab hover effect ko trigger karein */
+/* Hum .nav-item-wrapper:hover ka istemaal karenge taaki
+   ye dropdown logic ke saath consistent rahe */
+
+.nav-item-wrapper:hover .nav-link::after {
+  width: 100%; /* Hover par width ko 100% kar do */
+}
+
+/* Optional: Dropdown wale items par ye effect na dikhe */
+/* Agar aap chahte hain ki 'Features' jaise dropdown
+   wale link par line na aaye, toh ye add karein: */
+/*
+.nav-item-wrapper:hover .nav-link:has(.dropdown-icon)::after {
+  width: 0;
+}
+*/

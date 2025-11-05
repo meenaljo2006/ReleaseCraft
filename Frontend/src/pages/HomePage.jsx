@@ -3,7 +3,7 @@
 import React from 'react';
 import { easeInOut, motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import './HomePage.css'; // We will create this file next
+import './HomePage.css'; // Make sure this path is correct
 
 // This is the ElegantShape component, now using plain CSS classes
 function ElegantShape({
@@ -55,7 +55,7 @@ function ElegantShape({
   );
 }
 
-// This is the main Hero component, now named for your project
+// This is the main Hero component
 export default function HomePage() {
   const fadeUpVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -79,9 +79,9 @@ export default function HomePage() {
       <div className="hero-shapes-container">
         <ElegantShape
           delay={0.3}
-          width={600}
+          width={550}
           height={140}
-          rotate={12}
+          rotate={14}
           gradientClass="gradient-indigo"
           className="shape-1"
         />
@@ -131,11 +131,11 @@ export default function HomePage() {
           >
             <h1 className="hero-headline">
               <span className="hero-headline-main">
-                Stop rewriting release notes.
+                Messy Tickets
               </span>
               <br />
               <span className="hero-headline-styled">
-                Let AI do the first draft.
+                Polished Notes
               </span>
             </h1>
           </motion.div>
@@ -148,13 +148,11 @@ export default function HomePage() {
             animate="visible"
           >
             <p className="hero-subheadline">
-              ReleaseCraft connects to Jira, GitHub, and more. It translates
-              technical tickets into beautiful, human-readable release notes in
-              seconds.
+              ReleaseCraft cuts through the jargon, instantly translating technical Jira and GitHub tickets into polished release notes.
             </p>
           </motion.div>
 
-          {/* CTA Button - Merged from your HomePage.js */}
+          {/* CTA Buttons - Merged from your HomePage.js */}
           <motion.div
             custom={3}
             variants={fadeUpVariants}
@@ -162,10 +160,17 @@ export default function HomePage() {
             animate="visible"
             className="hero-cta-wrapper"
           >
-            <button className="hero-cta-button">
-              Get Started - It's Free
+            <button className="hero-cta-button" >
+              <a href="/signup">
+              Get Started
               <ArrowRight className="hero-cta-icon" />
+              </a>
+              
             </button>
+            {/* THIS IS THE NEW BUTTON */}
+            <a href="/viewdemo" className="hero-cta-button-outline">
+              View Demo
+            </a>
           </motion.div>
         </div>
       </div>
