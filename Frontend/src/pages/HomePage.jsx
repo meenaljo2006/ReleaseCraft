@@ -160,17 +160,19 @@ export default function HomePage() {
             animate="visible"
             className="hero-cta-wrapper"
           >
-            <button className="hero-cta-button" >
-              <a href="/signup">
+             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <a href="/signup"><button className="hero-cta-button" >
               Get Started
               <ArrowRight className="hero-cta-icon" />
-              </a>
-              
-            </button>
-            {/* THIS IS THE NEW BUTTON */}
+            </button></a>
+            </motion.div>
+
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <a href="/viewdemo" className="hero-cta-button-outline">
               View Demo
             </a>
+            </motion.div>
+            
           </motion.div>
         </div>
       </div>

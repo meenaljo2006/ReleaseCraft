@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, ArrowRight, Sparkles } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight, Sparkles, ChevronRight } from 'lucide-react';
 import './Navbar.css'; // Import the CSS file
 import logo from "../../public/logo.png"
 
@@ -89,13 +89,6 @@ export default function Navbar() {
               >
                 <a href={item.href} className="nav-link">
                   <span>{item.name}</span>
-                  {item.hasDropdown && (
-                    <ChevronDown
-                      className={`dropdown-icon ${
-                        activeDropdown === item.name ? 'active' : ''
-                      }`}
-                    />
-                  )}
                 </a>
               </div>
             ))}
@@ -106,9 +99,9 @@ export default function Navbar() {
               Sign In
             </a>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <a href="/signup" className="auth-link get-started">
-                <span>Get Started</span>
-                <ArrowRight className="get-started-icon" />
+              <a href="/support" className="auth-link get-started">
+                <span>Support</span>
+                <ChevronRight className="get-started-icon" />
               </a>
             </motion.div>
           </div>

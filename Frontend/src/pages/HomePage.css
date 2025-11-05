@@ -271,8 +271,7 @@
 
 .hero-cta-button-outline:hover {
   background-color: rgba(18, 153, 190, 0.05); /* hover:bg-primary/5 */
-  border-color: rgba(10, 63, 77, 0.402); /* Made border slightly more visible on hover */
-   transform: scale(1.05); 
+  border-color: rgba(10, 63, 77, 0.402); /* Made border slightly more visible on hover */ 
 }
 
 a{
