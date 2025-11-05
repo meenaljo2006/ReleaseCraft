@@ -1,32 +1,177 @@
-// src/pages/HomePage.js
+'use client';
+
 import React from 'react';
+import { easeInOut, motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import './HomePage.css'; // We will create this file next
 
-const HomePage = () => {
+// This is the ElegantShape component, now using plain CSS classes
+function ElegantShape({
+  className,
+  delay = 0,
+  width = 400,
+  height = 100,
+  rotate = 0,
+  gradientClass = 'gradient-default',
+}) {
   return (
-    <div className="homepage-container">
-      <header className="hero-section">
-        <h1 className="hero-headline">
-          Stop rewriting release notes. <br />
-          Let AI do the first draft.
-        </h1>
-        <p className="hero-subheadline">
-          ReleaseCraft connects to Jira, GitHub, and more. It translates
-          technical tickets into beautiful, human-readable release notes in
-          seconds.
-        </p>
-        <button className="hero-cta-button">
-          Get Started - It's Free
-        </button>
-      </header>
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: -150,
+        rotate: rotate - 15,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        rotate: rotate,
+      }}
+      transition={{
+        duration: 2.4,
+        delay,
+        ease: [0.23, 0.86, 0.39, 0.96],
+        opacity: { duration: 1.2 },
+      }}
+      className={`elegant-shape-wrapper ${className}`}
+    >
+      <motion.div
+        animate={{
+          y: [0, 15, 0],
+        }}
+        transition={{
+          duration: 12,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: 'easeInOut',
+        }}
+        style={{
+          width,
+          height,
+        }}
+        className="elegant-shape-inner"
+      >
+        <div className={`elegant-shape-main ${gradientClass}`} />
+      </motion.div>
+    </motion.div>
+  );
+}
 
-      {/* You will add more sections here later:
-        - Problem Section (Show the "before" - messy Jira tickets)
-        - Solution Section (Show the "after" - clean AI notes)
-        - Features Section
-      */}
+// This is the main Hero component, now named for your project
+export default function HomePage() {
+  const fadeUpVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1,
+        delay: 0.5 + i * 0.2,
+        ease: easeInOut,
+      },
+    }),
+  };
+
+  return (
+    <div className="hero-container">
+      {/* Background radial gradient blur */}
+      <div className="hero-gradient-bg" />
+
+      {/* Animated shapes container */}
+      <div className="hero-shapes-container">
+        <ElegantShape
+          delay={0.3}
+          width={600}
+          height={140}
+          rotate={12}
+          gradientClass="gradient-indigo"
+          className="shape-1"
+        />
+        <ElegantShape
+          delay={0.5}
+          width={500}
+          height={120}
+          rotate={-15}
+          gradientClass="gradient-rose"
+          className="shape-2"
+        />
+        <ElegantShape
+          delay={0.4}
+          width={300}
+          height={80}
+          rotate={-8}
+          gradientClass="gradient-violet"
+          className="shape-3"
+        />
+        <ElegantShape
+          delay={0.6}
+          width={200}
+          height={60}
+          rotate={20}
+          gradientClass="gradient-amber"
+          className="shape-4"
+        />
+        <ElegantShape
+          delay={0.7}
+          width={150}
+          height={40}
+          rotate={-25}
+          gradientClass="gradient-cyan"
+          className="shape-5"
+        />
+      </div>
+
+      {/* Hero Content */}
+      <div className="hero-content-container">
+        <div className="hero-content">
+          {/* Headline - Merged from your HomePage.js */}
+          <motion.div
+            custom={1}
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <h1 className="hero-headline">
+              <span className="hero-headline-main">
+                Stop rewriting release notes.
+              </span>
+              <br />
+              <span className="hero-headline-styled">
+                Let AI do the first draft.
+              </span>
+            </h1>
+          </motion.div>
+
+          {/* Subheadline - Merged from your HomePage.js */}
+          <motion.div
+            custom={2}
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <p className="hero-subheadline">
+              ReleaseCraft connects to Jira, GitHub, and more. It translates
+              technical tickets into beautiful, human-readable release notes in
+              seconds.
+            </p>
+          </motion.div>
+
+          {/* CTA Button - Merged from your HomePage.js */}
+          <motion.div
+            custom={3}
+            variants={fadeUpVariants}
+            initial="hidden"
+            animate="visible"
+            className="hero-cta-wrapper"
+          >
+            <button className="hero-cta-button">
+              Get Started - It's Free
+              <ArrowRight className="hero-cta-icon" />
+            </button>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Faded overlay at the bottom */}
+      <div className="hero-fade-overlay" />
     </div>
   );
-};
-
-export default HomePage;
+}

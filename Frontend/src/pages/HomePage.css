@@ -1,56 +1,303 @@
-/* src/pages/HomePage.css */
-.hero-section {
+/* Add this import to your main CSS file (e.g., index.css)
+  @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+*/
+
+/* CSS Variables for theming (DARK MODE) */
+:root {
+  --background: #000000; /* black */
+  --foreground: #f8fafc; /* slate-50 */
+  --primary: #be123c; /* rose-700 */
+  --primary-light: #f43f5e; /* rose-500 */
+  --muted-foreground: #94a3b8; /* slate-400 */
+  --white: #ffffff;
+  --black: #000000;
+
+  /* Shape Colors */
+  --indigo-500: #6366f1;
+  --rose-400: #fb7185;
+  --violet-400: #a78bfa;
+  --amber-400: #facc15; /* Changed from 500 for dark mode */
+  --cyan-400: #22d3ee; /* Changed from 500 for dark mode */
+}
+
+/* Base styles */
+.hero-container {
+  background-color: var(--background);
+  position: relative;
   display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
   align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Background blurred gradient */
+.hero-gradient-bg {
+  position: absolute;
+  inset: 0;
+  /* Upped opacity for dark mode (from 0.13 to 0.3) */
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(190, 18, 60, 0.3),
+    transparent,
+    rgba(190, 18, 60, 0.3)
+  );
+  filter: blur(48px);
+}
+
+/* Container for all animated shapes */
+.hero-shapes-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Elegant Shape Component Styles */
+.elegant-shape-wrapper {
+  position: absolute;
+}
+
+.elegant-shape-inner {
+  position: relative;
+}
+
+.elegant-shape-main {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px; /* rounded-full */
+  background-image: linear-gradient(
+    to right,
+    var(--gradient-from, rgba(255, 255, 255, 0.08)),
+    transparent
+  );
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.5);
+}
+
+.elegant-shape-main::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.7),
+    transparent 70%
+  );
+}
+
+/* Gradient utility classes for shapes (Dark Mode) */
+.gradient-default {
+  --gradient-from: rgba(255, 255, 255, 0.08);
+}
+.gradient-indigo {
+  --gradient-from: rgba(99, 102, 241, 0.7);
+}
+.gradient-rose {
+  --gradient-from: #fb7185;
+}
+.gradient-violet {
+  --gradient-from: #a78bfa;
+}
+.gradient-amber {
+  /* Was amber-500/70, now amber-400/90 */
+  --gradient-from: rgba(250, 204, 21, 0.9);
+}
+.gradient-cyan {
+  /* Was cyan-500/70, now cyan-400/90 */
+  --gradient-from: rgba(34, 211, 238, 0.9);
+}
+
+/* Positioning classes for shapes (no change) */
+.shape-1 {
+  top: 15%;
+  left: -10%;
+}
+.shape-2 {
+  top: 70%;
+  right: -5%;
+}
+.shape-3 {
+  bottom: 5%;
+  left: 5%;
+}
+.shape-4 {
+  top: 10%;
+  right: 15%;
+}
+.shape-5 {
+  top: 5%;
+  left: 20%;
+}
+
+/* Hero Content */
+.hero-content-container {
+  position: relative;
+  z-index: 10;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 80rem; /* max-w-7xl */
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.hero-content {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 48rem; /* max-w-3xl */
   text-align: center;
-  padding: 80px 24px;
-  max-width: 800px;
-  margin: 40px auto;
-  
-  /* Use variables */
-  background-color: var(--color-background-secondary);
-  border-radius: 16px;
-  /* We can remove the shadow or make it more subtle for dark mode */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--color-border);
 }
 
 .hero-headline {
-  font-size: 3rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 2rem; /* mb-8 */
+  font-size: 3rem; /* text-5xl */
   font-weight: 700;
-  
-  /* Use variables */
-  color: var(--color-text-primary);
-  margin-bottom: 24px;
-  line-height: 1.2;
+  letter-spacing: -0.025em; /* tracking-tight */
+}
+
+.hero-headline-main {
+  /* Changed from dark foreground to light foreground */
+  background-image: linear-gradient(
+    to bottom,
+    var(--foreground),
+    rgba(248, 250, 252, 0.8)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-headline-styled {
+  font-family: 'Pacifico', cursive; /* The custom font */
+  font-weight: 400; /* Pacifico is only 400 weight */
+  background-image: linear-gradient(
+    to right,
+    var(--primary-light),
+    var(--primary)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding: 1rem; /* p-4 (original was p-4, reduced for better flow) */
+  white-space: nowrap;
 }
 
 .hero-subheadline {
-  font-size: 1.25rem;
-  
-  /* Use variables */
-  color: var(--color-text-secondary);
-  margin-bottom: 32px;
-  max-width: 600px;
-  line-height: 1.6;
+  color: var(--muted-foreground); /* Updated to light gray */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 2.5rem; /* mb-10 */
+  max-width: 42rem; /* max-w-xl */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75; /* leading-relaxed */
+}
+
+.hero-cta-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .hero-cta-button {
-  font-size: 1.1rem;
-  padding: 16px 32px;
+  /* Button sizing and layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem; /* ~size-lg */
+  border-radius: 9999px; /* rounded-full */
+  font-size: 1rem;
+  font-weight: 500;
+
+  /* Button appearance */
+  color: var(--white);
   border: none;
-  border-radius: 8px;
+  background-image: linear-gradient(
+    to right,
+    var(--primary-light),
+    var(--primary)
+  );
+  box-shadow: 0 4px 14px 0 rgba(190, 18, 60, 0.2); /* shadow-primary/20 */
   cursor: pointer;
-  font-weight: 600;
-  
-  /* Use variables */
-  background-color: var(--color-primary);
-  color: white;
-  transition: background-color 0.2s;
+
+  /* Transitions */
+  transition: all 0.3s ease-in-out;
 }
 
 .hero-cta-button:hover {
-  /* Use variables */
-  background-color: var(--color-primary-hover);
+  background-image: linear-gradient(
+    to right,
+    rgba(244, 63, 94, 0.9),
+    rgba(190, 18, 60, 0.9)
+  );
+  box-shadow: 0 6px 20px 0 rgba(190, 18, 60, 0.3);
+}
+
+.hero-cta-icon {
+  margin-left: 0.5rem; /* ml-2 */
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+/* Bottom fade overlay */
+.hero-fade-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  /* Fades to dark background */
+  background-image: linear-gradient(
+    to top,
+    var(--background),
+    transparent 20%
+  );
+}
+
+/* Responsive Media Queries (no change) */
+@media (min-width: 640px) {
+  /* sm: */
+  .hero-headline {
+    font-size: 4.5rem; /* sm:text-7xl */
+  }
+  .hero-subheadline {
+    font-size: 1.125rem; /* sm:text-lg */
+  }
+  .hero-cta-wrapper {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 768px) {
+  /* md: */
+  .hero-headline {
+    font-size: 5rem; /* md:text-8xl */
+  }
+  .hero-subheadline {
+    font-size: 1.25rem; /* md:text-xl */
+  }
+  .shape-1 {
+    top: 20%;
+    left: -5%;
+  }
+  .shape-2 {
+    top: 75%;
+    right: 0%;
+  }
+  .shape-3 {
+    bottom: 10%;
+    left: 10%;
+  }
+  .shape-4 {
+    top: 15%;
+    right: 20%;
+  }
+  .shape-5 {
+    top: 10%;
+    left: 25%;
+  }
 }
