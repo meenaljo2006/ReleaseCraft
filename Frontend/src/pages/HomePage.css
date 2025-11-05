@@ -1,6 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Pacifico&display=swap');
 
-/* CSS Variables for theming (DARK MODE) */
 :root {
   --background: #000000; /* black */
   --foreground: #f8fafc; /* slate-50 */

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, ArrowRight, Sparkles, ChevronRight } from 'lucide-react';
+import { Menu, X,ChevronRight } from 'lucide-react';
 import './Navbar.css'; // Import the CSS file
 import logo from "../../public/logo.png"
 
@@ -95,9 +95,6 @@ export default function Navbar() {
           </nav>
 
           <div className="auth-buttons">
-            <a href="/login" className="auth-link sign-in">
-              Sign In
-            </a>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <a href="/support" className="auth-link get-started">
                 <span>Support</span>
