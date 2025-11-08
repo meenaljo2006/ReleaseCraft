@@ -101,10 +101,6 @@ function SignupPage() {
     return (
         <>
             {/* --- POPUP LOGIC HATA DIYA GAYA HAI --- */}
-
-            <div className="auth-header">
-                <button className="back-btn" onClick={()=> navigate("/")}><ArrowLeft/>Go Back to Home Page</button>
-            </div>
             <motion.div 
                 className="auth-page-wrapper"
                 initial={{ scale: 0.8, y: 20, opacity: 0 }} 

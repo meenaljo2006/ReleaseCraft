@@ -28,11 +28,12 @@ function App() {
         {/* Route 1: Public pages with Navbar (using MainLayout) */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/signup" element={<SignUpPage />} />
         </Route>
 
         {/* Route 2: Auth pages (without Navbar) */}
         {/* <Route path="/login" element={<LoginPage />} /> */}
-        <Route path="/signup" element={<SignUpPage />} />
+        
 
         {/* Route 3: Private (Protected) Route (without Navbar) */}
         <Route
