@@ -1,0 +1,154 @@
+{
+  "projects": [
+    {
+      "key": "S2W",
+      "name": "Sketch2Web",
+      "issues": [
+        {
+          "summary": "CORE: AI Conversion Engine v1",
+          "description": "Epic to track all work related to the core AI model that converts a sketch image into HTML/CSS code.",
+          "issueType": "Epic",
+          "status": "In Progress",
+          "priority": "Critical",
+          "labels": ["epic", "ai", "core-engine"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "FEAT: User Account Signup",
+          "description": "As a user, I want to sign up for a new account using my email and password so I can save my projects.",
+          "issueType": "Story",
+          "status": "Done",
+          "priority": "High",
+          "labels": ["feature", "auth", "ui"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "FEAT: Sketch Upload Interface",
+          "description": "As a user, I want to be able to upload a PNG or JPG image of my sketch via a drag-and-drop interface.",
+          "issueType": "Story",
+          "status": "In Progress",
+          "priority": "High",
+          "labels": ["feature", "ui", "upload"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "TASK: Set up S3 bucket for image storage",
+          "description": "Configure a new AWS S3 bucket with public-read access (or a signed URL generator) to store all user-uploaded sketches.",
+          "issueType": "Task",
+          "status": "Done",
+          "priority": "Major",
+          "labels": ["task", "devops", "aws", "storage"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "UI-FIX: Upload button overflows on mobile (Safari)",
+          "description": "On Safari on iOS, the 'Upload Sketch' button text is wrapping incorrectly, breaking the layout of the main page. Needs CSS fix.",
+          "issueType": "Bug",
+          "status": "Done",
+          "priority": "Minor",
+          "labels": ["bug", "ui", "css", "mobile"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "TASK: Implement AI model API client",
+          "description": "Create a backend service/client to send the preprocessed image to the main AI conversion model API (e.g., GPT-4o, Claude 3) and receive the code.",
+          "issueType": "Task",
+          "status": "In Progress",
+          "priority": "Critical",
+          "labels": ["task", "backend", "ai", "integration"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "FEAT: Code Preview Window",
+          "description": "As a user, after my sketch is processed, I want to see the generated HTML/CSS rendered in a live preview iframe.",
+          "issueType": "Story",
+          "status": "To Do",
+          "priority": "High",
+          "labels": ["feature", "ui", "preview"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "FEAT: Download generated code",
+          "description": "As a user, I want to be able to download the generated HTML and CSS files, likely as a .zip archive.",
+          "issueType": "Story",
+          "status": "To Do",
+          "priority": "High",
+          "labels": ["feature", "export", "files"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "TECH-DEBT: Move AI conversion to background worker",
+          "description": "The AI conversion API call can take up to 30 seconds. This should not block the main request thread. Refactor to use an async worker (e.g., Celery, SQS).",
+          "issueType": "Task",
+          "status": "Done",
+          "priority": "High",
+          "labels": ["tech-debt", "backend", "performance", "queue"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "PERF: Add loading state for conversion",
+          "description": "Right now, the UI just hangs while the conversion is happening. Add a loading spinner and a text update ('Processing sketch...').",
+          "issueType": "Improvement",
+          "status": "Done",
+          "priority": "Major",
+          "labels": ["improvement", "ux", "ui"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "API-401: Conversion fails for images > 5MB",
+          "description": "The API gateway or server is configured with a 5MB request body limit. This is causing 413 'Payload Too Large' errors. Need to increase limit or implement chunked upload.",
+          "issueType": "Bug",
+          "status": "In Progress",
+          "priority": "Critical",
+          "labels": ["bug", "api", "uploads"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "FEAT: User Dashboard - Project History",
+          "description": "As a logged-in user, I want to see a gallery or list of my previously converted sketches on a 'My Projects' dashboard.",
+          "issueType": "Story",
+          "status": "To Do",
+          "priority": "Major",
+          "labels": ["feature", "ui", "dashboard"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "TASK: Set up CI/CD pipeline",
+          "description": "Configure GitHub Actions (or similar) to automatically run tests and deploy the frontend (e.g., to Vercel) and backend (e.g., to AWS) on merge to main.",
+          "issueType": "Task",
+          "status": "Done",
+          "priority": "Major",
+          "labels": ["task", "devops", "ci-cd"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "ACC: Add keyboard navigation to upload modal",
+          "description": "The file upload modal cannot be easily navigated using only a keyboard. Focus is not trapped, and buttons are not reachable.",
+          "issueType": "Improvement",
+          "status": "To Do",
+          "priority": "Minor",
+          "labels": ["improvement", "accessibility", "ui"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "DOCS: Write API documentation for conversion endpoint",
+          "description": "Create public-facing API documentation (using Swagger/OpenAPI) for the /api/v1/convert endpoint for users who want to integrate programmatically.",
+          "issueType": "Task",
+          "status": "To Do",
+          "priority": "Major",
+          "labels": ["docs", "api"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "AUTH-102: Password reset email not sending",
+          "description": "The 'forgot password' flow completes, but the email (via SendGrid) is not being delivered. Check API keys and sender configuration.",
+          "issueType": "Bug",
+          "status": "Done",
+          "priority": "Critical",
+          "labels": ["bug", "auth", "email", "backend"],
+          "versions": ["v1.0.0"]
+        }
+      ]
+    }
+  ]
+}

@@ -39,7 +39,7 @@ const getJiraTickets = async (projectKey) => {
   }
 };
 
-const getTicketsForUser = async (userId, projectKey,startDate, endDate) => {
+const getTicketsForUser = async (userId, projectKey,status,startDate, endDate) => {
   const user = await User.findById(userId);
   if (!user || !user.jiraConnection || !user.jiraConnection.accessToken) {
     throw new Error('User not found or Jira not connected.');
@@ -52,11 +52,19 @@ const getTicketsForUser = async (userId, projectKey,startDate, endDate) => {
   const start = new Date(startDate).toISOString().split('T')[0];
   const end = new Date(endDate).toISOString().split('T')[0];
   
-  const jql = `project = "${projectKey}" AND status = "Done" AND resolutiondate >= "${start}" AND resolutiondate <= "${end}" ORDER BY updated DESC`;
+ // ...
+  let jql = `project = "${projectKey}" AND updated >= "${start}" AND updated <= "${end}"`;
+  
+  if (status) {
+    jql += ` AND status = "${status}"`;
+  }
+  // --- YEH NAYI, SAFER JQL HAI ---
+  jql += " ORDER BY status ASC, updated DESC"; // 'priority' ko hata diya
+  // ...
 
   const requestBody = {
     jql: jql,
-    fields: ["summary", "description", "issuetype", "status", "fixVersions", "labels"]
+    fields: ["summary", "description", "issuetype", "status","priority","created",  "updated",  "assignee"]
   };
 
   try {

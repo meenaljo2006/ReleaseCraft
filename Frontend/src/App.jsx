@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 // import LoginPage from './pages/LoginPage';
 import SignUpPage from "./pages/SignupPage";
 import Dashboard from './pages/Dashboard';
+import ProjectPage from './pages/ProjectPage';
 
 // Import your new layout
 import MainLayout from './layouts/MainLayout'; 
@@ -43,6 +44,11 @@ function App() {
               <Dashboard />
             </ProtectedRoute>
           }
+        />
+
+        <Route
+          path="/dashboard/project/:projectKey"
+          element={<ProtectedRoute><ProjectPage /></ProtectedRoute>}
         />
       </Routes>
     </BrowserRouter>

@@ -6,13 +6,13 @@ const CLIENT_SECRET = process.env.JIRA_OAUTH_CLIENT_SECRET;
 const CALLBACK_URL = 'http://localhost:3001/api/jira/auth/callback';
 
 //Service for Route 1: Generates the URL to send the user to.
-const getJiraAuthUrl = () => {
+const getJiraAuthUrl = (userId) => {
   const authUrl = new URL('https://auth.atlassian.com/authorize');
   authUrl.searchParams.append('audience', 'api.atlassian.com');
   authUrl.searchParams.append('client_id', CLIENT_ID);
   authUrl.searchParams.append('scope', 'read:jira-work offline_access'); // 'offline_access' is key for refresh token
-  authUrl.searchParams.append('redirect_uri', CALLBACK_URL);
-  authUrl.searchParams.append('state', 'some-random-state-for-security'); // For CSRF protection
+  // authUrl.searchParams.append('redirect_uri', CALLBACK_URL);
+  authUrl.searchParams.append('state', userId); // For CSRF protection
   authUrl.searchParams.append('response_type', 'code');
   authUrl.searchParams.append('prompt', 'consent');
   

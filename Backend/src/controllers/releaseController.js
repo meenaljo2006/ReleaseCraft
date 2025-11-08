@@ -8,7 +8,8 @@ const createRelease = async (req, res) => {
   try {
     const { title, projectKey, startDate, endDate } = req.body;
 
-    const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+    // const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+    const realUserId = req.user._id;
     
     if (!title || !projectKey || !startDate || !endDate) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -19,7 +20,7 @@ const createRelease = async (req, res) => {
       projectKey,
       startDate,
       endDate,
-      user: tempUserId
+      user: realUserId
     });
     
     await newRelease.save();
@@ -33,9 +34,10 @@ const createRelease = async (req, res) => {
 // Controller to get all releases for a user
 const getReleases = async (req, res) => {
   try {
-    const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+    // const tempUserId = "68fb5481da4dc85cbe1f7d53"; 
+    const realUserId = req.user._id;
     
-    const releases = await Release.find({ user: tempUserId }).sort({ createdAt: -1 });
+    const releases = await Release.find({ user: realUserId }).sort({ createdAt: -1 });
     res.status(200).json(releases);
     
   } catch (error) {
@@ -97,10 +99,11 @@ const getReleases = async (req, res) => {
 const generateReleaseNotes = async (req, res) => {
   try {
     const { id: releaseId } = req.params;
-    const tempUserId = "68fb5481da4dc85cbe1f7d53"; // Your test user ID
+    // const tempUserId = "68fb5481da4dc85cbe1f7d53"; // Your test user ID
+    const realUserId = req.user._id;
 
     // 1. Find the release
-    const release = await Release.findOne({ _id: releaseId, user: tempUserId });
+    const release = await Release.findOne({ _id: releaseId, user: realUserId });
     if (!release) {
       return res.status(404).json({ message: 'Release not found' });
     }
@@ -109,7 +112,7 @@ const generateReleaseNotes = async (req, res) => {
     // This is the *only* thing the controller does now
     await generationQueue.add('generate-notes-job', {
       releaseId: releaseId,
-      userId: tempUserId
+      userId: realUserId
     });
 
     // 3. Respond INSTANTLY
@@ -122,8 +125,53 @@ const generateReleaseNotes = async (req, res) => {
   }
 };
 
+// src/controllers/releaseController.js
+// ...
+// --- YEH NAYA FUNCTION ADD KAREIN ---
+const handleGenerateFromFilters = async (req, res) => {
+  try {
+    const { title, projectKey, filters } = req.body;
+    const realUserId = req.user._id;
+
+    if (!title || !projectKey || !filters) {
+      return res.status(400).json({ message: 'Title, projectKey, and filters are required.' });
+    }
+
+    // 1. Naya release draft banayein
+    const newRelease = new Release({
+      title: title,
+      projectKey: projectKey,
+      user: realUserId,
+      status: 'draft',
+      // Filters ko save kar lein, taaki worker use kar sake
+      startDate: filters.startDate,
+      endDate: filters.endDate
+      // Aap custom fields bhi save kar sakte hain
+    });
+    await newRelease.save();
+
+    // 2. Job ko queue karein
+    // **IMPORTANT**: Hum worker ko filters bhejenge
+    await generationQueue.add('generate-notes-job', {
+      releaseId: newRelease._id,
+      userId: realUserId,
+      projectKey: projectKey,
+      filters: filters // Poora filter object
+    });
+
+    res.status(202).json({ 
+      message: 'Accepted: Release generation has started.',
+      releaseId: newRelease._id
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createRelease,
   getReleases,
-  generateReleaseNotes 
+  generateReleaseNotes ,
+  handleGenerateFromFilters
 };

@@ -30,7 +30,7 @@ const githubProvider = new GithubAuthProvider();
 
 
 // This function sends the new user to your Node.js backend
-const syncUserWithBackend = async (user) => {
+const syncUserWithBackend = async (user,passedName = null) => {
   try {
     // Get the token from Firebase
     const idToken = await user.getIdToken();
@@ -39,12 +39,8 @@ const syncUserWithBackend = async (user) => {
     // Send the token to your backend's signup route
     await axios.post('http://localhost:3001/api/users/signup', {
       email: user.email,
-      name: user.displayName || 'New User', 
+      name: passedName || user.displayName || 'New User', 
       firebaseUid: user.uid
-    }, {
-      headers: {
-        'Authorization': `Bearer ${idToken}` // Send token for future auth
-      }
     });
 
     console.log("Backend sync successful.");
@@ -88,17 +84,19 @@ const signInWithGitHub = async () => {
 };
 
 
+// src/firebase.js
 const signInWithEmail = async (email, password) => {
-  try {
-    const res = await signInWithEmailAndPassword(auth, email, password);
-    return res.user;
-  } catch (err) {
-    console.error("Email sign-in error:", err.message);
-    return null;
-  }
+  try {
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    await syncUserWithBackend(res.user); // <-- ADD THIS LINE
+    return res.user;
+  } catch (err) {
+    console.error("Email sign-in error:", err.message);
+    return null;
+  }
 };
 
-const signUpWithEmail = async (email, password) => {
+const signUpWithEmail = async (email, password,name) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
     // A new user was created, we MUST sync them

@@ -1,0 +1,247 @@
+.sidebar {
+  width: 256px; /* Expanded width */
+  background-color: #111; /* Dark background */
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  color: var(--muted-foreground);
+  height: 100vh;
+  /* overflow: hidden; */
+  /* Collapse/Expand ke liye */
+  position: fixed;
+  transition: width 0.3s ease-in-out;
+  color: white;
+}
+
+/* --- Logo Section --- */
+.sidebar-logo {
+  padding: 1rem;
+  padding-left: 2rem;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  gap: 0.75rem;
+  /* Logo ko shrink hone se rokta hai */
+  flex-shrink: 0; 
+  overflow: hidden; /* Text ko hide karne ke liye */
+}
+
+.sidebar-logo:hover{
+    color: var(--foreground);
+  background-color: #222;
+
+}
+.logo-sideicon {
+  height: 40px; /* Aapke Dashboard.css se match kiya */
+  width: 40px;
+  flex-shrink: 0; /* Icon ko shrink hone se rokta hai */
+}
+
+.logo-sidetext {
+  font-size: 1.2rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #8360c3, #2ebf91);
+  -webkit-background-clip: text; /* For Safari/Chrome */
+  -webkit-text-fill-color: transparent; /* Make text show gradient */
+  background-clip: text; /* For other browsers */
+  color: transparent; /* Fallback */
+  white-space: nowrap;
+}
+
+
+/* --- Navigation --- */
+.sidebar-nav {
+  flex-grow: 1; /* User menu ko neeche push karta hai */
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow: hidden; /* Collapse ke waqt items ko hide karta hai */
+}
+
+.nav-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+  color: var(--muted-foreground);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  flex-shrink: 0; /* Button ko shrink hone se rokta hai */
+  color: white;
+}
+
+.nav-button:hover {
+  color: var(--foreground);
+  background-color: #222; /* Dark hover */
+}
+
+.nav-button.active {
+  background: linear-gradient(to right, #8360c3, #2ebf91);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(131, 96, 195, 0.5);
+}
+
+.nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  white-space: nowrap; /* Text ko ek line mein rakhta hai */
+}
+
+/* --- User Menu --- */
+.user-menu {
+  padding: 1rem;
+  border-top: 1px solid #333;
+  flex-shrink: 0; /* User menu ko shrink hone se rokta hai */
+  overflow: hidden; /* Collapse ke waqt items ko hide karta hai */
+}
+
+.user-email {
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  padding: 0 1rem;
+}
+
+.email-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Lamba email hone par ... dikhata hai */
+  margin-top: 2px;
+}
+
+.user-menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.user-menu-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--muted-foreground);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.logout{
+    color: var(--foreground);
+  background-color: #222;
+}
+
+.user-menu-button:hover {
+  color: var(--foreground);
+  background-color: #222;
+}
+
+.user-menu-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+
+/* --- COLLAPSE LOGIC --- */
+
+/* Jab sidebar collapsed ho */
+.sidebar.collapsed {
+  width: 90px; 
+}
+
+/* Toggle Button */
+.sidebar-toggle {
+  position: absolute;
+  top: 2rem;
+  right: -12px;
+  background-color: #18181b;
+  border: 1px solid #3f3f46;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a1a1aa;
+  transition: transform 0.3s ease;
+  z-index: 10;
+}
+
+.sidebar-toggle:hover {
+  background-color: #27272a;
+  color: #ffffff;
+}
+
+.toggle-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.collapsed .toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Saare text ko chhipaayein jab sidebar collapsed ho */
+.sidebar.collapsed .logo-sidetext,
+.sidebar.collapsed .nav-text {
+  display: none;
+}
+
+/* Collapsed state mein buttons/logo ko center karein */
+.sidebar.collapsed .sidebar-logo,
+.sidebar.collapsed .nav-button,
+.sidebar.collapsed .user-menu-button {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar.collapsed .sidebar-logo {
+  width: 100%;
+}
+
+/* Collapsed state mein email container ko style karein */
+.sidebar.collapsed .user-email {
+  padding: 0;
+  /* margin-bottom: 0.75rem; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  margin-top: 10px;
+}
+
+/* Email text ko avatar jaisa dikhayein jab collapsed ho */
+.sidebar.collapsed .email-text {
+  display: flex; /* Zaroori hai taaki display: none overwrite ho */
+  justify-content: center;
+  align-items: center;
+  width: 40px; /* Ek chhota circle */
+  height: 40px;
+  border-radius: 50%;
+  background-color: #2d639d; /* Thoda halka background */
+  color: var(--white);
+  font-weight: 600;
+  font-size: 1rem;
+}
