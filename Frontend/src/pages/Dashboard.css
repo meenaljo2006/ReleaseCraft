@@ -13,7 +13,7 @@
 .main-content {
   flex-grow: 1; /* Bachi hui poori jagah le leta hai */
   display: flex;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   padding: 2rem;
   overflow-y: auto; /* Agar content zyada ho toh scrollbar deta hai */
@@ -28,7 +28,7 @@
 }
 
 .content-wrapper {
-  max-width: 42rem;
+  max-width: 50rem;
   width: 100%;
 }
 
@@ -42,6 +42,7 @@
   font-weight: 700;
   color: var(--white);
   margin-bottom: 0.75rem;
+  font-family:cursive;
 }
 
 .welcome-header p {
@@ -53,10 +54,12 @@
 .empty-state-card {
   background-color: #111; /* Off-black card */
   border: 1px solid #333;
-  padding: 3rem;
+  padding: 2rem;
   border-radius: 0.75rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   text-align: center;
+  height: 21rem;
+
 }
 
 .empty-state-icon-wrapper {
@@ -66,15 +69,16 @@
   width: 5rem;
   height: 5rem;
   /* Rose gradient */
-  background-image: linear-gradient(to bottom right, rgba(190, 18, 60, 0.2), rgba(244, 63, 94, 0.2));
+  background-image: linear-gradient(to right, #8360c3, #2ebf91);
   border-radius: 1rem;
-  margin-bottom: 1.5rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
 .empty-state-icon {
   width: 2.5rem;
   height: 2.5rem;
-  color: var(--primary-light); /* Rose color */
+  color: white;
 }
 
 .empty-state-card h2 {
@@ -121,6 +125,7 @@
   background-color: #222;
   color: var(--white);
   border: 1px solid #333;
+  gap: 5px;
 }
 .cta-button-github:hover {
   background-color: #333;
@@ -128,8 +133,9 @@
 
 .cta-button-jira {
   /* Homepage ka primary gradient istemaal karein (rose) */
-  background-image: linear-gradient(to right, var(--primary), var(--primary-light));
+  background-image: linear-gradient(to right, #8360c3, #2ebf91);
   color: var(--white);
+  gap: 5px;
 }
 .cta-button-jira:hover {
   opacity: 0.9;
@@ -144,7 +150,7 @@
 .chevron-icon {
   width: 20px;
   height: 20px;
-  margin-left: 0.5rem;
+  /* margin-left: 0.5rem; */
   transition: transform 0.3s ease;
 }
 
@@ -154,22 +160,52 @@
   margin-top: 2rem;
 }
 
-.demo-link {
-  color: var(--primary-light); /* Rose color */
-  text-decoration: underline;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-size: 0.875rem;
-}
-.demo-link:hover {
-  color: var(--primary);
-}
-
 /* Media Query for button row */
 @media (min-width: 640px) { /* sm: */
   .cta-button-group {
     flex-direction: row;
   }
 }
+
+
+/* --- 1. COLLAPSIBLE SIDEBAR LOGIC --- */
+
+/* Assume karein sidebar ki default width 250px hai */
+.dashboard-container {
+  display: flex;
+}
+
+.main-content {
+  /* Sidebar ki width ke barabar margin dein */
+  margin-left: 250px; 
+  width: 100%;
+  padding: 2rem;
+  /* Smooth transition add karein */
+  transition: margin-left 0.3s ease; 
+}
+
+/* Jab parent container 'sidebar-collapsed' class hai */
+.dashboard-container.sidebar-collapsed .main-content {
+  /* Collapsed sidebar ki width ke barabar margin dein (e.g., 80px) */
+  margin-left: 80px; 
+}
+
+/* --- 2. HORIZONTAL PROJECT LIST LOGIC --- */
+
+.project-list {
+  display: flex;       /* Yeh items ko horizontal karega */
+  flex-wrap: wrap;     /* Yeh items ko wrap karega agar space na ho */
+  gap: 1.5rem;         /* Cards ke beech mein space */
+}
+
+.projectPage h2{
+  margin-bottom: 1px;
+}
+
+.pageDesc{
+  margin-top: 1px;
+  margin-bottom: 2rem;
+}
+
+
+
