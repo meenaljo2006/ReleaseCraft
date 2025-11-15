@@ -95,6 +95,37 @@ const getTicketsForUser = async (userId, projectKey,status,startDate, endDate) =
   }
 };
 
+const getProjectStats = async (userId, projectKey, atlassianId, accessToken) => {
+  const jiraApiUrl = `https://api.atlassian.com/ex/jira/${atlassianId}/rest/api/3/search/jql`;
+  const jql = `project = "${projectKey}"`;
+  const requestBody = { jql: jql, fields: ["status"], maxResults: 1000 };
+
+  try {
+    const response = await axios.post(jiraApiUrl, requestBody, {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    
+    console.log(`[DEBUG] Stats for ${projectKey}: Fetched ${response.data.issues.length} tickets.`);
+
+    const stats = { todo: 0, inProgress: 0, done: 0 };
+    for (const ticket of response.data.issues) {
+      const category = ticket.fields.status.statusCategory.name;
+
+      // --- YEH HAI SAHI CHECK ---
+      if (category === 'To Do') stats.todo++;
+      else if (category === 'In Progress') stats.inProgress++;
+      else if (category === 'Done') stats.done++;
+    }
+    
+    console.log(`[DEBUG] Final stats for ${projectKey}:`, stats);
+    return stats;
+
+  } catch (error) {
+    console.error(`Failed to get stats for ${projectKey}:`, error.message);
+    return { todo: 0, inProgress: 0, done: 0 };
+  }
+};
+
 const getProjectsForUser = async (userId) => {
   const user = await User.findById(userId);
   if (!user || !user.jiraConnection || !user.jiraConnection.accessToken) {
@@ -116,6 +147,18 @@ const getProjectsForUser = async (userId) => {
       name: project.name,
       avatarUrl: project.avatarUrls['48x48']
     }));
+
+    const statsPromises = projects.map(project => 
+      getProjectStats(userId, project.key, atlassianId, accessToken)
+    );
+    
+    // Saare API calls ke poora hone ka wait karein
+    const allStats = await Promise.all(statsPromises);
+
+    // 4. Stats ko projects ke saath jod dein
+    projects.forEach((project, index) => {
+      project.stats = allStats[index]; // { todo: 5, inProgress: 10, ... }
+    });
     
     return projects;
 
@@ -137,6 +180,15 @@ const getProjectsForUser = async (userId) => {
           avatarUrl: project.avatarUrls['48x48']
         }));
 
+        const statsPromises = projects.map(project => 
+          getProjectStats(userId, project.key, atlassianId, newAccessToken) // Naya token use karein
+        );
+        const allStats = await Promise.all(statsPromises);
+        
+        projects.forEach((project, index) => {
+          project.stats = allStats[index];
+        });
+
         return projects;
         
       } catch (refreshError) {
@@ -151,5 +203,6 @@ const getProjectsForUser = async (userId) => {
 module.exports = {
   getJiraTickets,
   getTicketsForUser,
-  getProjectsForUser 
+  getProjectsForUser ,
+  getProjectStats
 };
