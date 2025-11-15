@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile
 } from "firebase/auth";
 
 import axios from 'axios';
@@ -99,8 +100,10 @@ const signInWithEmail = async (email, password) => {
 const signUpWithEmail = async (email, password,name) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
+
+    await updateProfile(res.user, { displayName: name });
     // A new user was created, we MUST sync them
-    await syncUserWithBackend(res.user);
+    await syncUserWithBackend(res.user,name);
     return res.user;
   } catch (err) {
     console.error("Email sign-up error:", err.message);
