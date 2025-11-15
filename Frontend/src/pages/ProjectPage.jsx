@@ -211,7 +211,7 @@ function ProjectPage() {
             </table>
           </div>
           
-<div className="generate-button-container">
+          <div className="generate-button-container">
             <button 
               onClick={handleGenerate} 
               className="cta-button generate-button"
