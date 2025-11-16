@@ -1,0 +1,100 @@
+{
+  "projects": [
+    {
+      "key": "S2W",
+      "name": "Sketch2Web",
+      "issues": [
+        {
+          "summary": "BILL: Monetization & Billing",
+          "description": "Epic to track all work related to payments, subscriptions, and Stripe integration.",
+          "issueType": "Epic",
+          "status": "To Do",
+          "priority": "High",
+          "labels": ["epic", "billing", "stripe"],
+          "versions": ["v1.2.0"]
+        },
+        {
+          "summary": "FEAT: User Login",
+          "description": "As a user, I want to log in with my email and password to access my saved projects.",
+          "issueType": "Story",
+          "status": "Done",
+          "priority": "High",
+          "labels": ["feature", "auth", "ui"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "FEAT: Add 'Login with Google'",
+          "description": "As a user, I want to sign up or log in using my Google account for faster access.",
+          "issueType": "Story",
+          "status": "In Progress",
+          "priority": "Major",
+          "labels": ["feature", "auth", "sso"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "FEAT: Implement 'Pro' subscription plan",
+          "description": "As a user, I want to be able to upgrade to a 'Pro' plan to get higher conversion limits and save more projects.",
+          "issueType": "Story",
+          "status": "To Do",
+          "priority": "High",
+          "labels": ["feature", "billing", "stripe"],
+          "versions": ["v1.2.0"]
+        },
+        {
+          "summary": "TASK: Integrate Stripe Checkout for 'Pro' plan",
+          "description": "Set up backend and frontend components for Stripe Checkout. Create webhook for successful payment.",
+          "issueType": "Task",
+          "status": "To Do",
+          "priority": "High",
+          "labels": ["task", "backend", "stripe", "billing"],
+          "versions": ["v1.2.0"]
+        },
+        {
+          "summary": "FEAT: Delete project from dashboard",
+          "description": "As a user, I want a 'delete' button on my project card in the dashboard so I can remove old sketches.",
+          "issueType": "Story",
+          "status": "In Progress",
+          "priority": "Major",
+          "labels": ["feature", "dashboard", "ui"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "BUG: Code preview renders incorrectly on Firefox",
+          "description": "The generated HTML/CSS in the preview iframe looks broken on Firefox (works on Chrome). Seems to be a flexbox or grid CSS issue.",
+          "issueType": "Bug",
+          "status": "To Do",
+          "priority": "Major",
+          "labels": ["bug", "ui", "css", "cross-browser"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "PERF: Pre-process and compress images before AI conversion",
+          "description": "Large images are slow and expensive to send to the AI. We should resize and compress all images (e.g., to max 1024x1024) on the backend before processing.",
+          "issueType": "Improvement",
+          "status": "Done",
+          "priority": "High",
+          "labels": ["improvement", "performance", "backend", "aws"],
+          "versions": ["v1.0.0"]
+        },
+        {
+          "summary": "OPS: Set up production logging and monitoring",
+          "description": "Configure production environment (e.g., AWS) to send logs to Datadog/Sentry. Set up basic alerts for 500 errors and high latency.",
+          "issueType": "Task",
+          "status": "In Progress",
+          "priority": "High",
+          "labels": ["task", "devops", "ops", "logging"],
+          "versions": ["v1.1.0"]
+        },
+        {
+          "summary": "FEAT: Edit project name",
+          "description": "As a user, I want to be able to click on the title of my project in the dashboard and rename it.",
+          "issueType": "Story",
+          "status": "To Do",
+          "priority": "Minor",
+          "labels": ["feature", "dashboard", "ui"],
+          "versions": ["v1.1.0"]
+        }
+      ]
+    }
+  ]
+}
