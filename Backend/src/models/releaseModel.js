@@ -37,7 +37,7 @@ const releaseSchema = new Schema({
   
   status: {
     type: String,
-    enum: ['draft', 'published'],
+    enum: ["draft", "pending", "processing", "published", "failed"],
     default: 'draft'
   }
 

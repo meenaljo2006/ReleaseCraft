@@ -2,57 +2,84 @@ require('dotenv').config();
 const axios = require('axios');
 
 const API_KEY = process.env.GEMINI_API_KEY;
-console.log("My AI Key from .env:", API_KEY ? "Loaded" : "!!! NOT LOADED !!!");
-
-if (!API_KEY) throw new Error("GEMINI_API_KEY is not set in the .env file.");
+if (!API_KEY) throw new Error("GEMINI_API_KEY missing.");
 
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`;
 
-(async () => {
-  try {
-    const res = await axios.get(
-      `https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`
-    );
-    console.log(JSON.stringify(res.data, null, 2));
-  } catch (err) {
-    console.error("Error listing models:", err.response?.data || err.message);
+function extractJiraText(desc) {
+  if (!desc) return "";
+
+  if (typeof desc === "string") return desc;
+
+  if (typeof desc === "object") {
+    try {
+      return JSON.stringify(desc)
+        .replace(/<[^>]*>/g, "")
+        .replace(/\\"/g, '"')
+        .replace(/\s+/g, " ")
+        .substring(0, 600);
+    } catch {
+      return "";
+    }
   }
-})();
 
-const summarizeTicket = async (ticketSummary, ticketDescription) => {
-  if (!ticketSummary) return ""; 
+  return "";
+}
+
+const batchSummarizeTickets = async (tickets) => {
+  if (!tickets || tickets.length === 0) return [];
 
   try {
-    const prompt = `
-      You are an expert technical writer. Your job is to rewrite a technical ticket into one clear, human-readable sentence for release notes.
-      Focus on what the user gets, not the technical jargon.
+    let ticketTextBlock = "";
 
-      RULES:
-      - Be concise and friendly.
-      - Start with a past-tense verb (e.g., "Fixed", "Added", "Improved").
-      - If it's a bug, start with "Fixed".
-      - If it's a feature, start with "Added" or "Introduced".
-      - If it's an improvement, start with "Improved" or "Updated".
+    tickets.forEach((t, index) => {
+      const summary = t.fields.summary || "";
+      const desc = extractJiraText(t.fields.description);
 
-      Technical Summary: "${ticketSummary}"
-      Technical Description: "${ticketDescription || 'No description'}"
-
-      Write a single-sentence release note:
-    `;
-
-    const requestBody = { contents: [{ parts: [{ text: prompt }] }] };
-
-    const response = await axios.post(API_URL, requestBody, {
-      headers: { 'Content-Type': 'application/json' }
+      ticketTextBlock += `#${index + 1}: ${summary} — ${desc}\n`;
     });
 
-    const text = response?.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-    return text.replace(/^["']|["']$/g, '');
+    const prompt = `
+      Rewrite ALL the Jira tickets below into one-sentence, human-friendly release notes.
 
-  } catch (error) {
-    console.error(`Error calling AI service: ${ticketSummary}`, error.response?.data || error.message);
-    return ticketSummary; 
+      Rules:
+      - ONE sentence per ticket.
+      - Start sentences with a past-tense verb.
+      - Bug → "Fixed ..."
+      - Feature → "Added ..." / "Introduced ..."
+      - Improvement → "Improved ..."
+      - NO jira keys, no internal tech jargon.
+      - Output MUST be a bullet list (one bullet per ticket).
+
+      TICKETS:
+      ${ticketTextBlock}
+
+      Return ONLY bullet points like:
+      - Fixed XYZ...
+      - Added ABC...
+      - Improved DEF...
+    `;
+
+    const res = await axios.post(
+      API_URL,
+      {
+        contents: [{ parts: [{ text: prompt }] }],
+      },
+      { headers: { "Content-Type": "application/json" }, timeout: 45000 }
+    );
+
+    const text = res?.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+    const lines = text
+      .split("\n")
+      .map((l) => l.replace(/^[-•\s]+/, "").trim())
+      .filter((l) => l.length > 0);
+
+    return lines;
+  } catch (err) {
+    console.error("❌ Batch AI failed:", err.response?.data || err);
+    throw new Error("Batch AI summarization failed");
   }
 };
 
-module.exports = { summarizeTicket };
+module.exports = { batchSummarizeTickets };

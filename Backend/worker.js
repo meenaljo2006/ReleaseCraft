@@ -1,84 +1,82 @@
-// worker.js
-require('dotenv').config(); // Load .env variables
+require('dotenv').config();
 const { Worker } = require('bullmq');
-const { getTicketsForUser } = require('./src/services/jiraService');
-const { summarizeTicket } = require('./src/services/aiService');
-const Release = require('./src/models/releaseModel');
 const mongoose = require('mongoose');
+
+const { getTicketsForUser } = require('./src/services/jiraService');
+const { batchSummarizeTickets } = require('./src/services/aiService');
+const Release = require('./src/models/releaseModel');
 
 const redisUrl = process.env.REDIS_URL;
 
-console.log('Worker is starting...');
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("🟢 Worker connected to MongoDB"))
+  .catch((err) => console.error("🔴 Mongo error:", err));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Worker connected to MongoDB.'))
-  .catch(err => console.error('Worker MongoDB connection error:', err));
-
-// This is the function that will process each job
 const jobProcessor = async (job) => {
   const { releaseId, userId, projectKey, filters } = job.data;
-  console.log(`WORKER: Processing job for release: ${releaseId}`);
+
+  console.log(`\n🚀 Processing Release Job ${releaseId}`);
 
   try {
     const release = await Release.findById(releaseId);
-    if (!release) throw new Error('Release not found');
+    if (!release) throw new Error("Release not found");
 
-    let tickets = [];
-
-    // --- NAYA LOGIC ---
-    if (filters) {
-      console.log('WORKER: Fetching tickets from Jira using filters...');
-      tickets = await getTicketsForUser(
-        userId,
-        projectKey,
-        filters.status,
-        filters.startDate,
-        filters.endDate
-      );
-    } else {
-      // Puraana logic (agar zaroorat pade)
-      console.log('WORKER: No filters found, using release dates.');
-      tickets = await getTicketsForUser(
-        userId,
-        release.projectKey,
-        "Done", // Default
-        release.startDate,
-        release.endDate
-      );
-    }
-    // --- NAYA LOGIC KHATAM ---
-
-    console.log(`WORKER: Summarizing ${tickets.length} tickets.`);
-    
-    let finalNotes = `## ${release.title}\n\n`;
-    for (const ticket of tickets) {
-      // Ab 'fields' use karna hai kyunki tickets Jira se aa rahe hain
-      const technicalSummary = ticket.fields.summary;
-      const technicalDescription = ticket.fields.description;
-      
-      const humanSummary = await summarizeTicket(technicalSummary, technicalDescription);
-      finalNotes += `- ${humanSummary}\n`;
-    }
-
-    release.content = finalNotes;
+    release.status = "processing";
     await release.save();
 
-    console.log(`WORKER: Job completed for release: ${releaseId}`);
-    return 'Done';
-  } catch (error) {
-    console.error(`WORKER: Job failed for release ${releaseId}:`, error.message);
-    throw error; // This will mark the job as 'failed' in BullMQ
+    // Fetch tickets
+    const tickets = await getTicketsForUser(
+      userId,
+      projectKey,
+      filters.status,
+      filters.startDate,
+      filters.endDate
+    );
+
+    console.log(`📦 Tickets fetched: ${tickets.length}`);
+
+    if (tickets.length === 0) {
+      release.status = "published";
+      release.content = `## ${release.title}\n\nNo 'Done' tickets found.`;
+      await release.save();
+      return "No tickets";
+    }
+
+    // BATCH AI CALL 🚀
+    console.log("🧠 Running batch AI summarization...");
+    const summaries = await batchSummarizeTickets(tickets);
+
+    // Build final notes
+    let content = `## ${release.title}\n\n`;
+    summaries.forEach((s) => {
+      content += `- ${s}\n`;
+    });
+
+    // Save final content
+    release.status = "published";
+    release.content = content;
+    await release.save();
+
+    console.log(`✅ Release ${releaseId} Completed`);
+    return "Done";
+
+  } catch (err) {
+    console.error("❌ Worker Job Failed:", err.message);
+
+    const failed = await Release.findById(job.data.releaseId);
+    if (failed) {
+      failed.status = "failed";
+      failed.content = `ERROR: ${err.message}`;
+      await failed.save();
+    }
+
+    throw err;
   }
 };
 
-// Start the worker
-const worker = new Worker('release-generation', jobProcessor, {
-  connection: {
-    url: redisUrl
-  }
-});
-
-worker.on('failed', (job, err) => {
-  console.error(`Job ${job.id} failed with error ${err.message}`);
-});
+new Worker("release-generation", jobProcessor, {
+  connection: { url: redisUrl },
+}).on("failed", (job, err) =>
+  console.error(`❌ Job ${job.id} failed: ${err.message}`)
+);
