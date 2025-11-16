@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTicketsForUser, createReleaseFromFilters } from '../api'; 
 import Sidebar from '../components/Sidebar';
+import GenerateReleaseModal from '../components/GenerateReleaseModal.jsx';
 import './Dashboard.css'; // Common styles
 import './ProjectPage.css'; // Is page ki specific styles
 
@@ -38,7 +39,19 @@ function ProjectPage() {
   const statusMenuRef = useRef(null); 
 
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+
+  const handleNavigate = (view) => {
+    if (view === 'dashboard') {
+      navigate('/dashboard'); // Go to the main dashboard (projects list)
+    } else if (view === 'releases') {
+      navigate('/releases'); // Go to the Releases list page (new route)
+    } else if (view === 'settings') {
+      // Settings ko dashboard page par le jayenge, jahan settings tab visible ho
+      navigate('/dashboard', { state: { initialView: 'settings' } }); 
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -129,7 +142,7 @@ function ProjectPage() {
     <div className={`dashboard-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
       <Sidebar 
         activeView="" 
-        onNavigate={(view) => navigate('/dashboard')} 
+        onNavigate={handleNavigate} 
         isCollapsed={isCollapsed}
         onToggle={toggleSidebar}
       />
@@ -213,7 +226,7 @@ function ProjectPage() {
           
           <div className="generate-button-container">
             <button 
-              onClick={handleGenerate} 
+              onClick={() => setIsModalOpen(true)}
               className="cta-button generate-button"
               disabled={isLoading || tickets.length === 0}
             >
@@ -222,6 +235,11 @@ function ProjectPage() {
           </div>
         </div>
       </div>
+      <GenerateReleaseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        projectKey={projectKey}
+      />
     </div>
   );
 }

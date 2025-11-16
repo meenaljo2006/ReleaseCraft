@@ -1,0 +1,221 @@
+/* src/pages/ReleaseViewPage.css */
+
+/* --- Page Layout --- */
+.release-view-page {
+  width: 1100px;
+  margin: 5px auto;
+  padding: 30px ;
+  /* border-radius: 20px; */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* background-color: #ffffff; */
+    display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 4rem); /* Dashboard ke padding ko hata kar poori height */
+  
+}
+
+/* --- 2. Loading / Error States (Dark Mode) --- */
+.release-page-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: #9ca3af; /* Light gray text */
+  font-weight: 500;
+}
+/* Back button ko dark mode mein style karein */
+.release-page-state .back-button {
+  margin-top: 20px;
+  border-color: #4b5563; /* Gray border */
+  color: #e5e7eb; /* Light text */
+}
+.release-page-state .back-button:hover {
+  background-color: #3c5137; /* Gray hover */
+}
+
+/* --- 3. Top Navigation (Dark Mode) --- */
+.release-nav {
+  margin-bottom: 30px;
+  flex-shrink: 0; /* Isse shrink hone se rokein */
+}
+
+.back-button {
+  background: linear-gradient(to right, #8360c3, #2ebf91);
+  border: 1px solid #4b5563; /* Gray border */
+  color: #e5e7eb; /* Light text */
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+.back-button:hover {
+  opacity: 0.9; 
+  /* Thoda sa chhota hoga */
+  transform: scale(0.98); 
+}
+
+/* --- 4. Middle Content (White Paper) --- */
+.release-document {
+  flex-grow: 1; /* Yeh beech ka saara space le lega */
+  
+  /* --- YEH NAYI STYLING HAI --- */
+  background-color: #edebeb;
+  border-radius: 8px;
+  padding: 30px 40px; /* Content ke andar padding */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+/* --- 5. Document Header (Light Mode - Dark Text) --- */
+/* (In styles mein koi badlaav nahi, yeh pehle se hi light background ke liye the) */
+.release-header {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+.ai-generated-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: #d1fae5;
+  color: #065f46;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.release-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.2;
+}
+.release-subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 8px 0 0 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --- 6. Markdown Content (Light Mode - Dark Text) --- */
+/* (Yeh styles bhi light background ke liye perfect hain) */
+.release-content-markdown {
+  line-height: 1.7;
+  color: #374151;
+}
+.release-content-markdown h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* (Baaki saare h3:before, li::before styles waise hi rahenge) */
+/* ... */
+
+/* --- 7. Bottom Pagination (Dark Mode) --- */
+.release-pagination-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 20px;
+  flex-shrink: 0; /* Isse shrink hone se rokein */
+  
+}
+
+.release-pagination-footer span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #9ca3af; /* Light gray text */
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(to right, #8360c3, #2ebf91);
+  border: 1px solid #4b5563; /* Gray border */
+  color: #e5e7eb; /* Light text */
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  opacity: 0.9; 
+  /* Thoda sa chhota hoga */
+  transform: scale(0.98); 
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* (Baaki saare styles .release-content-markdown ke waise hi rahenge) */
+.release-content-markdown h3:before {
+  content: '';
+  display: inline-block;
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 4px;
+  padding: 4px;
+}
+.release-content-markdown h3:is(h3:contains('New Features'), h3:contains('Features')):before {
+  background-color: #fef3c7;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>');
+}
+.release-content-markdown h3:is(h3:contains('Improvements'), h3:contains('Changes')):before {
+  background-color: #dbeafe;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%231d4ed8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.13 19.13A10 10 0 0 1 4.87 4.87M4.87 19.13A10 10 0 0 1 19.13 4.87m-4.24 1.76a2 2 0 1 1-2.83-2.83 2 2 0 0 1 2.83 2.83zM12 12a2 2 0 1 1-2.83-2.83 2 2 0 0 1 2.83 2.83zM12 12a2 2 0 1 1-2.83 2.83 2 2 0 0 1 2.83-2.83zm4.24 1.76a2 2 0 1 1-2.83 2.83 2 2 0 0 1 2.83-2.83z"></path></svg>');
+}
+.release-content-markdown h3:is(h3:contains('Bug Fixes'), h3:contains('Fixes')):before {
+  background-color: #fee2e2;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23b91c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 9V7a2 2 0 0 0-2-2h-3.9a2 2 0 0 1-1.66-.9L11 2 9.66 4.1A2 2 0 0 1 8 5H4a2 2 0 0 0-2 2v2m0 6v2a2 2 0 0 0 2 2h3.9a2 2 0 0 1 1.66.9L11 22l1.34-2.1a2 2 0 0 1 1.66-.9H18a2 2 0 0 0 2-2v-2m-8 3v-6m-3-1v-2m6 3V9"></path></svg>');
+}
+.release-content-markdown ul {
+  list-style-type: none;
+  padding-left: 10px;
+  margin-top: 15px;
+}
+.release-content-markdown li {
+  position: relative;
+  padding-left: 25px;
+  margin-bottom: 10px;
+}
+.release-content-markdown li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #6b7280;
+}
+.release-content-markdown h3:is(h3:contains('New Features'), h3:contains('Features')) + ul li::before {
+  color: #3b82f6;
+}
+.release-content-markdown h3:is(h3:contains('Improvements'), h3:contains('Changes')) + ul li::before {
+  color: #16a34a;
+}
+.release-content-markdown h3:is(h3:contains('Bug Fixes'), h3:contains('Fixes')) + ul li::before {
+  color: #ef4444;
+}
+

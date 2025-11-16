@@ -12,7 +12,7 @@
   import { 
     getJiraProjects, 
     getJiraAuthUrl, 
-    disconnectJira // <-- CHANGED: Naya function import kiya
+    disconnectJira
   } from '../api';
 
   function Dashboard() {
@@ -76,21 +76,27 @@
       }
     };
     
-    // 6. Sidebar navigation function
-    const handleNavigate = (view) => {
-      if (view === 'dashboard' || view === 'releases' || view === 'settings') {
-        setActiveView(view);
-      } 
-      else if (view === 'connect-jira') {
-        handleConnectJira();
-      }
-      else if (view === 'connect-github') {
-        alert("GitHub coming soon!");
-      }
-      else {
-        alert(`Navigating to: ${view}`);
-      }
-    };
+// 6. Sidebar navigation function
+    const handleNavigate = (view) => {
+      if (view === 'dashboard') {
+        navigate('/dashboard'); // Projects/Dashboard ka main route
+      } 
+      else if (view === 'releases') {
+        navigate('/releases'); // <-- RELEASES PAGE KE NAYE ROUTE PAR BHEJEIN
+      } 
+      else if (view === 'settings') {
+        setActiveView(view); // Settings ko abhi tab mein rehne dein
+      }
+      else if (view === 'connect-jira') {
+        handleConnectJira();
+      }
+      else if (view === 'connect-github') {
+        alert("GitHub coming soon!");
+      }
+      else {
+        alert(`Navigating to: ${view}`);
+      }
+    };
 
     // 7. Main content render function
     const renderContent = () => {
@@ -157,12 +163,7 @@
               </div>
             </div>
           );
-        case 'releases':
-          return (
-            <div>
-              <h2>My Releases</h2>
-            </div>
-          );
+        
         case 'settings':
           // <-- CHANGED: Poora 'settings' case update kiya
           return (
@@ -196,8 +197,6 @@
     }
 
     return (
-      // ... (Aapka main return JSX waisa hi rahega) ...
-      // ... (Copy from your file) ...
       <div className={`dashboard-container ${isCollapsed ? 'sidebar-collapsed' : ''}`}>
         <Sidebar 
           activeView={activeView} 

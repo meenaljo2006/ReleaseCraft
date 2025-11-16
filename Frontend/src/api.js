@@ -40,6 +40,7 @@ export const getTicketsForProject = (projectKey) =>
 export const getReleases = () => api.get('/releases');
 export const createRelease = (data) => api.post('/releases', data);
 export const generateRelease = (releaseId) => api.post(`/releases/${releaseId}/generate`);
+export const getReleaseDetails = (releaseId) => api.get(`/releases/${releaseId}`);
 
 // ... (existing imports)
 

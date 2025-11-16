@@ -8,7 +8,8 @@ import HomePage from './pages/HomePage';
 import SignUpPage from "./pages/SignupPage";
 import Dashboard from './pages/Dashboard';
 import ProjectPage from './pages/ProjectPage';
-
+import ReleasesDashboard from './pages/ReleasesDashboard';
+import ReleaseViewPage from './pages/ReleaseViewPage';
 // Import your new layout
 import MainLayout from './layouts/MainLayout'; 
 
@@ -32,10 +33,6 @@ function App() {
           <Route path="/signup" element={<SignUpPage />} />
         </Route>
 
-        {/* Route 2: Auth pages (without Navbar) */}
-        {/* <Route path="/login" element={<LoginPage />} /> */}
-        
-
         {/* Route 3: Private (Protected) Route (without Navbar) */}
         <Route
           path="/dashboard"
@@ -50,6 +47,18 @@ function App() {
           path="/dashboard/project/:projectKey"
           element={<ProtectedRoute><ProjectPage /></ProtectedRoute>}
         />
+
+        <Route
+          path="/releases" 
+          element={<ProtectedRoute><ReleasesDashboard /></ProtectedRoute>} // <-- NAYA ROUTE
+        />
+
+        {/* RELEASE DETAIL (ALAG PAGE) */}
+        <Route
+          path="/releases/:projectKey" // Release detail ke liye
+          element={<ProtectedRoute><ReleaseViewPage /></ProtectedRoute>}
+        />
+
       </Routes>
     </BrowserRouter>
   );

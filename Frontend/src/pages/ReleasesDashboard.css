@@ -1,0 +1,101 @@
+
+
+/* --- Releases Page Container --- */
+.releases-page {
+  padding: 20px 20px 20px 0px;
+}
+
+.releases-page .page-header {
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 15px;
+}
+
+.releases-page .page-header h2 {
+  font-size: 24px;
+  color: #1f2937;
+  margin-bottom: 5px;
+}
+
+/* --- Releases List Layout --- */
+.releases-list-container {
+  display: grid;
+  /* 3 cards per row */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+  gap: 20px;
+}
+
+/* --- Individual Release Card --- */
+.release-card {
+  background: rgba(8, 8, 8, 0.295);
+  border: 1px dashed #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+
+}
+
+.release-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.release-card h3 {
+  font-size: 18px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: #f0f1f4;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.release-card p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 5px 0;
+}
+
+/* --- Status Indicator Styling --- */
+.release-card .status-draft,
+.release-card .status-published {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+/* Color for 'draft' status (Waiting for AI generation) */
+.release-card .status-draft {
+  background-color: #fef3c7; /* Light Yellow */
+  color: #b45309; /* Dark Orange */
+}
+
+/* Color for 'published' status (Content is ready) */
+.release-card .status-published {
+  background-color: #d1fae5; /* Light Green */
+  color: #065f46; /* Dark Green */
+}
+
+
+.releases-page h2{
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.releases-page .releaseDesc{
+    margin-top: 1px;
+    margin-bottom:2rem ;
+}
+
+.main-content {
+  /* Sidebar ki width ke barabar margin dein */
+  margin-left: 190px; 
+  width: 100%;
+  padding: 2rem;
+  /* Smooth transition add karein */
+  transition: margin-left 0.3s ease; 
+}
+
