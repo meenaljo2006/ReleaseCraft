@@ -19,8 +19,8 @@ const GenerateReleaseModal = ({ isOpen, onClose, projectKey }) => {
   useEffect(() => {
     if (isOpen) {
       const today = getTodayDate();
-      setTitle(`Release for ${projectKey} - ${today}`);
-      setStartDate(today);
+      setTitle(`Version - `);
+      setStartDate("");
       setEndDate(today);
     }
   }, [isOpen, projectKey]);
@@ -46,9 +46,9 @@ const GenerateReleaseModal = ({ isOpen, onClose, projectKey }) => {
         }
       });
 
-      alert("Release generation has started!");
+      // alert("Release generation has started!");
       onClose();
-      navigate('/dashboard');
+      navigate(`/releases/${projectKey}`);
 
     } catch (err) {
       console.error(err);
@@ -67,9 +67,7 @@ const GenerateReleaseModal = ({ isOpen, onClose, projectKey }) => {
         <button className="modal-close-btn" onClick={onClose}>&times;</button>
 
         <h2>Generate Release Notes</h2>
-        <p>
-          This will generate notes for <strong>{projectKey}</strong>.
-        </p>
+        <p>This will generate notes for <strong>{projectKey}</strong>.</p>
 
         <form onSubmit={handleSubmit}>
 
@@ -111,7 +109,7 @@ const GenerateReleaseModal = ({ isOpen, onClose, projectKey }) => {
               Cancel
             </button>
 
-            <button type="submit" className="cta-button" disabled={isLoading}>
+            <button type="submit" className="btn-secondary " disabled={isLoading}>
               {isLoading ? "Generating..." : "Start Generation"}
             </button>
           </div>
