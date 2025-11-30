@@ -35,8 +35,23 @@ mongoose.connect(MONGO_URI)
     process.exit(1); 
   });
 
+const { createBullBoard } = require('@bull-board/api');
+const { BullMQAdapter } = require('@bull-board/api/bullMQAdapter');
+const { ExpressAdapter } = require('@bull-board/express');
+const generationQueue = require('./queues/generationQueue'); // Import your queue
+
 //Middleware - It allows your server to read JSON from request bodies
 app.use(express.json()); 
+
+const serverAdapter = new ExpressAdapter();
+serverAdapter.setBasePath('/admin/queues'); // This will be your link
+
+createBullBoard({
+  queues: [new BullMQAdapter(generationQueue)],
+  serverAdapter: serverAdapter,
+});
+
+app.use('/admin/queues', serverAdapter.getRouter());
 
 //Route2 - Tell Express that any URL starting with "/api/users" should be handled by your "userRoutes" file.
 app.use('/api/users', userRoutes); 
